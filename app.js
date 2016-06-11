@@ -19,9 +19,15 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/files',express.static(path.join(__dirname,'uploads')));
+
+app.use(express.static(path.join(__dirname, 'client/src')));
+app.use('/vendor',express.static(path.join(__dirname, 'client/vendor')));
+app.use('/src',express.static(path.join(__dirname, 'client/src')));
+app.use('/app',express.static(path.join(__dirname, 'client/src/app')));
+app.use('/common',express.static(path.join(__dirname, 'client/src/common')));
+app.use('/assets',express.static(path.join(__dirname, 'client/src/assets')));
+app.use('/files',express.static(path.join(__dirname,'client/src')));
 
 
 var connect = function(){
@@ -38,7 +44,7 @@ var connect = function(){
 connect();
 mongoose.connection.on('error',console.log);
 mongoose.connection.on('disconnected',connect);
-require('./app/auth/passport')(passport); //settting up passport config
+require('./app/auth/passport')(passport); 
 
 
 require('./config/routes')(app);
