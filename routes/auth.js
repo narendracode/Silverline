@@ -7,6 +7,6 @@ var passportConfig = require('../app/auth/passport.js');
 router.post('/signup',authController.localSignup);
 router.post('/login',authController.localLogin);
 router.delete('/signup',authController.deleteLocalUser);
-
+router.post('/upload',authController.uploadImg);
 
 module.exports = router;

@@ -4,6 +4,7 @@ angular.module('auth',[
                         ,'ui.bootstrap.showErrors'
                         ,'validation.match'
                         ,'auth.services'
+                        ,'ngFileUpload'
                       ]
               );
 
@@ -16,25 +17,20 @@ angular.module('auth').config([
              $httpProvider.interceptors.push('AuthHttpRequestInterceptor');
              $stateProvider.state('login', {
                                                 url: "/login/",
-                                                templateUrl: 'app/authorization/login.tpl.html',
+                                                templateUrl: 'app/auth/login.tpl.html',
                                                 controller: 'AuthController'
                                             }
                             )
                             .state('signup',{
                                                 url: "/signup/",
-                                                templateUrl : 'app/authorization/signup.tpl.html',
+                                                templateUrl : 'app/auth/signup.tpl.html',
                                                 controller: 'AuthController'
-                                            }
-                            )
-                            .state('settings',{
-                                                url: "/settings/",
-                                                templateUrl : 'app/authorization/settings.tpl.html',
-                                                controller: 'SettingsController'
                                             }
                             );
             }
 ]);
-/*
+
+
 angular.module('auth').controller('AuthController',  [
                                                     '$scope'
                                                     ,'$resource'
@@ -43,9 +39,13 @@ angular.module('auth').controller('AuthController',  [
                                                     ,'AuthService'
                                                     ,'$window'
                                                     ,'$rootScope'
+                                                    ,'Upload'
                                             ,
-            function($scope,$resource,$state,$location,AuthService,$window,$rootScope,chatsocket){
+    function($scope,$resource,$state,$location,AuthService,$window,$rootScope,Upload){
                         $scope.errorExists = false;
+                        $scope.profilePic = $location.protocol() + "://" + $location.host() + ":" + $location.port()+'/files/profile.png';
+                        console.log("profilePic "+$scope.profilePic);
+        
                         $scope.signup = function(){
                             $scope.$broadcast('show-errors-check-validity'); 
                             if ($scope.singupForm.$valid){
@@ -82,6 +82,41 @@ angular.module('auth').controller('AuthController',  [
                                 });
                             }
                            }//login
+                       
+                       
+                       $scope.upload = function (file) {
+                           // $scope.progressPercentage = 0.0;
+                           Upload.upload({
+                               url: 'auth/upload',
+                               data: {file: file, 'username': 'hello'}
+                           }).then(function (resp) {
+                               console.log('Success ' + resp.config.data.file.name + '   uploaded. Response: ' + JSON.stringify(resp.data));
+                               console.log($location.protocol() + "://" + $location.host() + ":" + $location.port());
+                               $scope.profilePic = $location.protocol() + "://" + $location.host() + ":" + $location.port()+'/files/'+resp.data.file.name;
+                               $scope.images.push($location.protocol() + "://" + $location.host() + ":" + $location.port()+'/files/'+resp.data.file.name);
+                               //$scope.progressPercentage = 0.0;
+                               var img =  "\n \n ![Alt text]("+$location.protocol() + "://" + $location.host() + ":" + $location.port()+'/files/'+resp.data.file.name+">)";
+
+
+                               $scope.blog.content = $scope.blog.content.concat(img);
+                           }, function (resp) {
+                               console.log('Error status: ' + resp.status);
+                           }, function (evt) {
+                               // var psgPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                               $scope.progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                               console.log('progress: ' + $scope.progressPercentage + '% ' + evt.config.data.file.name);
+
+                               if($scope.progressPercentage === 100.0){
+                                   // resetProgressBar();
+                                   //  $scope.progressPercentage = 0.0;
+
+
+                               }
+
+                           });
+                       };
+                       
+                       
+                       
             }
 ]);
-*/

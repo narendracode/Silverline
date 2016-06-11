@@ -3,8 +3,8 @@ angular.module('app', [
     ,'ui.router'
     ,'ngStorage'
     ,'auth'
-   ,'auth.services'
-   ,'ui.bootstrap'
+    ,'auth.services'
+    ,'ui.bootstrap'
 ]);
 
 angular.module('app').config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
@@ -15,16 +15,7 @@ angular.module('app').config(['$stateProvider', '$urlRouterProvider', function (
         templateUrl: "app/index.tpl.html"
         ,controller: 'AppCtrl'
     });
-
 }]);
-
-
-/*angular.module('app').controller('AppCtrl',[ 
-    function(){
-        
-    }
-]);
-*/
 
 angular.module('app').controller('HeaderCtrl', ['$scope','$location','AuthService','$rootScope', function($scope,$location,AuthService,$rootScope) {    
     $scope.logout = function(){
@@ -35,10 +26,8 @@ angular.module('app').controller('HeaderCtrl', ['$scope','$location','AuthServic
     } 
 }]);
 
-
-
-
 angular.module('app').controller('AppCtrl', ['$scope','$location','AuthService','$rootScope','$localStorage', function($scope,$location,AuthService,$rootScope,$localStorage) {
+    
     $scope.myInit = function(){
         if($localStorage.token){
             AuthService.currentUser(function(result){
@@ -61,7 +50,6 @@ angular.module('app').controller('AppCtrl', ['$scope','$location','AuthService',
         }else
             return false;
     }
-
 
     $scope.logout = function(){
         AuthService.logout(function(result){

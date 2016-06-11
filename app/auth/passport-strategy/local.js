@@ -37,9 +37,13 @@ exports.signupStrategy = new LocalStrategy({
                     user.token = token;
                     user.save(function(err,user1){
                         if(err){
-                            return done(null, { type : false,data: 'Error occured '+ err});
+                            return done(null, { 
+                                type : false,
+                                err: 'Error occured '+ err,
+                                data:''
+                                });
                         }
-                        return done(null, {type : true, token : user1.token});
+                        return done(null, {type : true, token : user1.token,err:''});
                     }); 
                 });   
             }
@@ -65,7 +69,7 @@ exports.loginStrategy = new LocalStrategy({
             if(!user.validPassword(password)){
                 return done(null, {type: false, 'data': 'Password is wrong.'}); 
             }
-            return done(null, {type : true, token : user.token});
+            return done(null, {type : true, token : user.token,err:''});
         });    
     });
 });

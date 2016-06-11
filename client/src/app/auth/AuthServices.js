@@ -70,6 +70,11 @@ module.factory('AuthService',function($resource,$rootScope,$location,$localStora
                 callback(result);
             }); 
         },
+        logout : function(callback){
+                $rootScope.currentUser = null;
+                delete $localStorage.token;
+                callback({});
+        },
         signup: function(user,callback){
             var signupResource = new SignupResource();
             signupResource.email = user.email;
@@ -103,5 +108,4 @@ module.factory('AuthService',function($resource,$rootScope,$location,$localStora
         }
     }
     return service;
-
 });

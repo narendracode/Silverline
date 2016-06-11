@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var config = require('./config/config');
 var mongoose = require("mongoose");
 var passport = require('passport');
+var multipart = require('connect-multiparty');
 var app = express();
 
 // view engine setup
@@ -20,6 +21,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+app.use(multipart({
+    uploadDir: config.tmp
+}));
+
+app.use(function(req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
+    next();
+});
 
 app.use(express.static(path.join(__dirname, 'client/src')));
 app.use('/vendor',express.static(path.join(__dirname, 'client/vendor')));
@@ -27,8 +38,7 @@ app.use('/src',express.static(path.join(__dirname, 'client/src')));
 app.use('/app',express.static(path.join(__dirname, 'client/src/app')));
 app.use('/common',express.static(path.join(__dirname, 'client/src/common')));
 app.use('/assets',express.static(path.join(__dirname, 'client/src/assets')));
-app.use('/files',express.static(path.join(__dirname,'client/src')));
-
+app.use('/files',express.static(path.join(__dirname,'uploads')));
 
 var connect = function(){
     var options = {
@@ -46,9 +56,7 @@ mongoose.connection.on('error',console.log);
 mongoose.connection.on('disconnected',connect);
 require('./app/auth/passport')(passport); 
 
-
 require('./config/routes')(app);
 require('./config/express')(app);
-
 
 module.exports = app;
