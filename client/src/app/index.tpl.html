@@ -13,7 +13,23 @@
                     <table class="table table-striped">
                         <tr><td>Name</td><td>Phone</td><td>View</td><td>Edit</td><td>Delete</td></tr>
                         <tr ng-repeat="user in users">
-                            <td>{{user.info.name}}</td><td>{{user.local.phone}}</td><td>View</td><td>Edit</td><td>Delete</td>
+                            <td>{{user.info.name}}</td>
+                            <td>{{user.local.phone}}</td>
+                            <td>
+                                <div>
+                                    <a href="#/view/{{user.local.phone}}">View</a> 
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <a href="#/edit/{{user.local.phone}}">Edit</a> 
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <a href="#/delete/{{user.local.phone}}">Delete</a> 
+                                </div>
+                            </td>
                         </tr>
                     </table>
                 </div>

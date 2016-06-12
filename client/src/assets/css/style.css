@@ -1,3 +1,15 @@
+.profilePic_container {
+    width: 100px;
+    height:100px;
+}
+
+/* resize images */
+.profilePic_container img {
+    width: 100%;
+    height: auto;
+}
+
+
 .form-control {
     outline: 0;
     border-color: #ECECEC;

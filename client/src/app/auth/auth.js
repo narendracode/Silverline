@@ -27,9 +27,56 @@ angular.module('auth').config([
                                                 templateUrl : 'app/auth/signup.tpl.html',
                                                 controller: 'AuthController'
                                             }
+                            )
+                            .state('view',{
+                                                url: "/view/:phone",
+                                                templateUrl : 'app/auth/user.view.tpl.html',
+                 controller: 'UserEditController'
+                                            }
+                            )
+                            .state('edit',{
+                                                url: "/edit/:phone",
+                                                templateUrl : 'app/auth/user.edit.tpl.html',
+                                                controller: 'UserEditController'
+                                            }
                             );
             }
 ]);
+
+
+
+
+angular.module('auth').controller('UserEditController',[
+    '$scope'
+    ,'$resource'
+    ,'$state'
+    ,'$location'
+    ,'UserService'
+    ,'$window'
+    ,'$rootScope'
+    ,'Upload'
+    ,'UsersListService'
+    ,'$stateParams'
+    ,
+    function($scope,$resource,$state,$location,UserService,$window,$rootScope,Upload,UsersListService,$stateParams){
+        var userService = new UserService();
+
+        console.log(".. id: "+$stateParams.phone);
+        userService.$get({phone:$stateParams.phone},function(result){
+            $scope.user = result.data.user;
+        });
+
+    $scope.updateUser = function(){
+        userService.name = $scope.user.info.name;
+        userService.email = $scope.user.info.email;
+        userService.$update({phone:$stateParams.phone},function(result){
+                    if(result)
+                        $location.path("/");
+                });
+    }
+
+}]);
+
 
 
 angular.module('auth').controller('AuthController',  [

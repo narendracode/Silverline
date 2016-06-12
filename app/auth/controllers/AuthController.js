@@ -47,6 +47,40 @@ exports.getUsers = function(req,res){
     }
 }
 
+exports.getUser = function(req,res){
+    if(req.user.role === 'admin'){
+        console.log("get user with Phone : "+req.params.phone);
+        User.findOne({ 'local.phone': req.params.phone })
+            .populate('info')
+            .exec(function(err,user){
+            res.json({type : true, data:{'user': user},err:''});  
+        });
+    }else{
+        return res.json({type : true, data:{},err:'You are not authorized to access this API.'}); 
+    }
+}
+
+
+exports.editUser = function(req,res){
+    if(req.user.role === 'admin'){
+        console.log("edit user with Phone : "+req.params.phone);
+        User.findOne({ 'local.phone': req.params.phone })
+            .populate('info')
+            .exec(function(err,user){
+            user.info.name = req.body.name;
+            user.info.email = req.body.email;
+            var info = user.info;
+            info.save(function(err,result){
+                user.info = result;
+                res.json({type : true, data:{'user': user},err:''});     
+            });
+        });
+    }else{
+        return res.json({type : true, data:{},err:'You are not authorized to access this API.'}); 
+    }
+}
+
+
 
 exports.localLogin = function(req, res, next){
     passport.authenticate('local-login',function(err, user, info){

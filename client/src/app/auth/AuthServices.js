@@ -34,6 +34,26 @@ module.factory('UsersListService', function() {
 
 });
 
+
+module.factory('UserService',function($resource){
+    return $resource('/auth/user/:phone', 
+                     {
+        phone: '@phone'
+    },
+                     {
+        'update': { method:'PUT' }
+    },
+                     {
+        'get': { method: 'GET', isArray: false }
+    },
+                     {
+        'delete': { method: 'DELETE'}
+    }
+                    );
+});
+
+
+
 module.factory('AuthService',function($resource,$rootScope,$location,$localStorage){
 
     var LoginResource = $resource('/auth/login');

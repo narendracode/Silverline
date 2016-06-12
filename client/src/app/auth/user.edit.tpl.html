@@ -1,0 +1,39 @@
+<h3>User Edit</h3>
+<hr>
+
+<form ng-submit="updateUser()">
+    <div class="form-group">
+        <label for="title">Name</label>
+        <input ng-model="user.info.name"  type="text" class="form-control" autofocus  id="name" placeholder="Name">
+    </div>
+    <div class="form-group">
+        <label>Role</label>
+        {{user.role}}    
+    </div>
+    
+    <div class="form-group">
+        <label>Phone</label>
+        {{user.local.phone}}    
+    </div>
+    
+    <div class="form-group">
+        <label>Date of Birth</label>
+        {{user.info.dob}}    
+    </div>
+    
+    <div class="form-group">
+        <label for="title">Email</label>
+        <input ng-model="user.info.email"  type="text" class="form-control" autofocus  id="email" placeholder="Email">
+    </div>
+
+    <div class="profilePic_container">
+        <img src="{{user.info.profilePic}}" alt="" >  
+    </div>
+        
+    <div class="form-group">
+        <label>Address</label>
+        {{user.info.address}}    
+    </div>
+    
+    <button type="submit" class="btn btn-danger">Submit</button>
+</form>
