@@ -35,6 +35,19 @@ exports.deleteLocalUser = function(req,res,next){
     });
 }
 
+exports.getUsers = function(req,res){
+    if(req.user.role === 'admin'){
+        User.find({ 'local.phone': { '$ne':req.user.phone } })
+            .populate('info')
+            .exec(function(err,users){
+            res.json({type : true, data:{'users': users },err:''});  
+        });
+    }else{
+        return res.json({type : true, data:{'users': [] },err:''}); 
+    }
+}
+
+
 exports.localLogin = function(req, res, next){
     passport.authenticate('local-login',function(err, user, info){
         if (err) { 

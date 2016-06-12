@@ -9,6 +9,14 @@
             </div>
             <div ng-show='hasAccess("admin")'>
                 only for role admin.. 
+                <div>
+                    <table class="table table-striped">
+                        <tr><td>Name</td><td>Phone</td><td>View</td><td>Edit</td><td>Delete</td></tr>
+                        <tr ng-repeat="user in users">
+                            <td>{{user.info.name}}</td><td>{{user.local.phone}}</td><td>View</td><td>Edit</td><td>Delete</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

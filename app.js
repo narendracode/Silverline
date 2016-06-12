@@ -8,7 +8,9 @@ var config = require('./config/config');
 var mongoose = require("mongoose");
 var passport = require('passport');
 var multipart = require('connect-multiparty');
+var jwt = require('express-jwt'); 
 var app = express();
+var fs = require('fs');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -55,6 +57,22 @@ connect();
 mongoose.connection.on('error',console.log);
 mongoose.connection.on('disconnected',connect);
 require('./app/auth/passport')(passport); 
+
+var cert = fs.readFileSync('key.pem');
+
+app.use(jwt({ secret: cert}).unless({path: ['/auth/signup',
+                                            '/auth/login'
+                                           ]})); // API end point in path are public 
+
+app.use(function(err, req, res, next){
+
+    if (err.constructor.name === 'UnauthorizedError') {
+        console.log(" ##### Err "+err);
+        //res.status(401).send('Unauthorized');
+       // res.json([{type:false,cause:"UNAUTHORIZED",msg:"You are not authorized to access this."}]);
+    }
+});
+
 
 require('./config/routes')(app);
 require('./config/express')(app);

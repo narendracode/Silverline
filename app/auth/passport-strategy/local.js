@@ -61,6 +61,7 @@ exports.signupStrategy = new LocalStrategy({
                             phone:user.local.phone,
                             profilePic:info.profilePic
                         }, cert, { algorithm: 'HS512'});
+                        
                         return done(null, {type : true,err:'', data:{'token' : token}});
                     }); 
                 });
@@ -79,6 +80,7 @@ function(req, phone, password, done) {
         var mUser = new User();
         User.findOne({'local.phone': phone})
             .populate('info')
+            .populate('')
             .exec(function(err,user){
             if (err){
                 return done(err);
@@ -96,8 +98,18 @@ function(req, phone, password, done) {
                 name : user.info.name,
                 phone: user.local.phone,
                 profilePic: user.info.profilePic
-            }, cert, { algorithm: 'HS512'});
-            return done(null, {type : true, data:{'token' : token},err:''}); 
+            }, cert, { algorithm: 'HS512' });
+            
+            console.log("Role : "+user.role)
+            if(user.role === 'admin'){
+                User.find({ 'local.phone': { '$ne':user.local.phone } })
+                    .populate('info')
+                    .exec(function(err,users){
+                        return done(null, {type : true, data:{'token':token, 'users': users },err:''});  
+                    });
+            }else{
+                return done(null, {type : true, data:{'token':token },err:''});  
+            } 
         });  
     });
 });

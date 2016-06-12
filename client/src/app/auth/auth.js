@@ -40,9 +40,10 @@ angular.module('auth').controller('AuthController',  [
                                                     ,'AuthService'
                                                     ,'$window'
                                                     ,'$rootScope'
-                                                    ,'Upload'                     
+                                                    ,'Upload'
+                                                    ,'UsersListService'
     ,
-    function($scope,$resource,$state,$location,AuthService,$window,$rootScope,Upload){
+    function($scope,$resource,$state,$location,AuthService,$window,$rootScope,Upload,UsersListService){
                         $scope.errorExists = false;
                         $scope.profilePic = $location.protocol() + "://" + $location.host() + ":" + $location.port()+'/files/profile.png';
                         console.log("profilePic "+$scope.profilePic);
@@ -83,8 +84,10 @@ angular.module('auth').controller('AuthController',  [
                                         $scope.errorExists = true;
                                         $scope.loginErrorMessage = result['err'];
                                     }else{
-                                        console.log(" $$$ response from AuthService.login, info returned : "+JSON.stringify(result));
-                                        $location.path("/") 
+                                        //console.log(" $$$ response from AuthService.login, info returned : "+JSON.stringify(result));
+                                        console.log(" users : "+JSON.stringify(result.data.users));
+                                        UsersListService.setUsers(result.data.users);
+                                        $location.path("/"); 
                                     }
                                 });
                             }

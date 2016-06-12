@@ -10,11 +10,36 @@ module.factory("AuthHttpRequestInterceptor",function ($localStorage) {
     };
 });
 
+module.factory('UsersListService', function() {
+    var users = [];
+
+    var addUser = function(newObj) {
+        users.push(newObj);
+    };
+
+    var getUsers = function(){
+        return users;
+    };
+    
+    var setUsers = function(users1){
+        users = users1;
+    };
+    
+
+    return {
+        addUser: addUser,
+        getUsers: getUsers,
+        setUsers: setUsers
+    };
+
+});
+
 module.factory('AuthService',function($resource,$rootScope,$location,$localStorage){
 
     var LoginResource = $resource('/auth/login');
     var SignupResource = $resource('/auth/signup'); 
-
+    var UserResource = $resource('/auth/users');
+    
     function parseToken(token){
         var user = {};
         if(token){
@@ -54,6 +79,13 @@ module.factory('AuthService',function($resource,$rootScope,$location,$localStora
 
     // The public API of the service
     var service = {
+        
+        getUsers : function(callback){
+            var userResource = new UserResource();
+            userResource.$get(function(result){
+                callback(result);
+            });
+        },
         login: function(user,callback){
             var loginResource = new LoginResource();
             loginResource.phone = user.phone;
@@ -62,6 +94,7 @@ module.factory('AuthService',function($resource,$rootScope,$location,$localStora
                 if(typeof result !== 'undefined'){
                     if(result.type){
                         $localStorage.token = result.data.token;
+                        console.log("Token : "+result.data.token);
                         var user = parseToken(result.data.token);
                         console.log(" data after login : "+JSON.stringify(user));
                         $rootScope.currentUser = user;

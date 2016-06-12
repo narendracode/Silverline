@@ -26,7 +26,7 @@ angular.module('app').controller('HeaderCtrl', ['$scope','$location','AuthServic
     } 
 }]);
 
-angular.module('app').controller('AppCtrl', ['$scope','$location','AuthService','$rootScope','$localStorage', function($scope,$location,AuthService,$rootScope,$localStorage) {
+angular.module('app').controller('AppCtrl', ['$scope','$location','AuthService','$rootScope','$localStorage','UsersListService', function($scope,$location,AuthService,$rootScope,$localStorage,UsersListService) {
     
     $scope.myInit = function(){
         if($localStorage.token){
@@ -41,6 +41,19 @@ angular.module('app').controller('AppCtrl', ['$scope','$location','AuthService',
         'admin': ['admin','user']
     };
 
+    
+    //$scope.users = UsersListService.getUsers();
+   
+    
+    $scope.loadAdminUsers = function(){
+        AuthService.getUsers(function(result){
+            console.log(" users from admin.."+JSON.stringify(result));
+            $scope.users = result.data.users;
+        });
+    };
+    
+    $scope.loadAdminUsers();
+    
     $rootScope.hasAccess = function(level){
         if($rootScope.currentUser && accessLevels[$rootScope.currentUser['role']]){
             if(accessLevels[$rootScope.currentUser['role']].indexOf(level) > -1)

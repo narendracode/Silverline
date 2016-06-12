@@ -8,5 +8,7 @@ router.post('/signup',authController.localSignup);
 router.post('/login',authController.localLogin);
 router.delete('/signup',authController.deleteLocalUser);
 router.post('/upload',authController.uploadImg);
+router.get('/users',authController.getUsers);
+
 
 module.exports = router;
