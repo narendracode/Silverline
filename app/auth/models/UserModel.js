@@ -3,19 +3,11 @@ var bcrypt   = require('bcrypt-nodejs');
 
 // define the schema for our user model
 var userSchema = mongoose.Schema({
-    profilePic : {
-        type: String,
-        default: '/files/profile.png'
-    },
     local            : {
         phone        : String,
         password     : String
     },
-    name: {type: String, default:null},
-    address: {type: String, default:null},
-    about: {type: String, default:null},
-    email:{type:String, default: null},
-    dob:{type:Date, default:null}
+    info: {type: mongoose.Schema.Types.ObjectId, ref: 'Info'},
 });
 
 userSchema.plugin(require('mongoose-role'), {

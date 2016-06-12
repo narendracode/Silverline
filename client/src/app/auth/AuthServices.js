@@ -56,13 +56,13 @@ module.factory('AuthService',function($resource,$rootScope,$location,$localStora
     var service = {
         login: function(user,callback){
             var loginResource = new LoginResource();
-            loginResource.email = user.email;
+            loginResource.phone = user.phone;
             loginResource.password = user.password;
             loginResource.$save(function(result){
                 if(typeof result !== 'undefined'){
                     if(result.type){
-                        $localStorage.token = result.token;
-                        var user = parseToken(result.token);
+                        $localStorage.token = result.data.token;
+                        var user = parseToken(result.data.token);
                         console.log(" data after login : "+JSON.stringify(user));
                         $rootScope.currentUser = user;
                     }

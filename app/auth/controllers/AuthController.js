@@ -36,11 +36,14 @@ exports.deleteLocalUser = function(req,res,next){
 }
 
 exports.localLogin = function(req, res, next){
-    res.json({
-        type:true,
-        data: 'Response from local login',
-        err: ''
-    });
+    passport.authenticate('local-login',function(err, user, info){
+        if (err) { 
+            return res.json({type:false,err: 'error occured '+ err, data:{}}); 
+        }
+        if(user){
+            return res.json(user);
+        }
+    })(req, res, next);
 }
 
 

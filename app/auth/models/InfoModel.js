@@ -13,4 +13,4 @@ var InfoSchema = mongoose.Schema({
     dob:{type:Date, default:null}
 });
 
-module.exports = mongoose.model('Info', userSchema);
+module.exports = mongoose.model('Info', InfoSchema);

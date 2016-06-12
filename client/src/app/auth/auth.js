@@ -6,7 +6,6 @@ angular.module('auth',[
                         ,'auth.services'
                         ,'ngFileUpload'
                         ,'ui.bootstrap'
-                        //,'ui.bootstrap.datepickerPopup'
                       ]
               );
 
@@ -63,7 +62,7 @@ angular.module('auth').controller('AuthController',  [
                                        ,function(result){
                                              if(!result['type']){
                                                 $scope.errorExists = true;
-                                                $scope.loginErrorMessage = result['data'];
+                                                $scope.loginErrorMessage = result['err'];
                                             }else{
                                                   $location.path('/') 
                                             }
@@ -74,20 +73,22 @@ angular.module('auth').controller('AuthController',  [
 
                        $scope.login = function(){
                             $scope.$broadcast('show-errors-check-validity'); 
-                            if ($scope.loginForm.$valid){                                                           AuthService.login({
-                                                'email':$scope.email,
+                            if ($scope.loginForm.$valid){  
+                                AuthService.login({
+                                                'phone':$scope.phone,
                                                 'password':$scope.password
-                                              },                                                           function(result){          
-                                if(!result['type']){
-                                    $scope.errorExists = true;
-                                    $scope.loginErrorMessage = result['data'];
-                                }else{
-                                    console.log(" $$$ response from AuthService.login, info returned : "+JSON.stringify(result));
-                                   $location.path("/") 
-                                }
+                                              }
+                                ,function(result){          
+                                    if(!result['type']){
+                                        $scope.errorExists = true;
+                                        $scope.loginErrorMessage = result['err'];
+                                    }else{
+                                        console.log(" $$$ response from AuthService.login, info returned : "+JSON.stringify(result));
+                                        $location.path("/") 
+                                    }
                                 });
                             }
-                           }//login
+                        }//login
                        
                        $scope.upload = function (file) {
                            // $scope.progressPercentage = 0.0;
@@ -207,12 +208,6 @@ angular.module('auth').controller('AuthController',  [
             }
 
             return '';
-        }
-                       
-        
-        
-        
-        
-                       
-            }
+        }          
+    }
 ]);
