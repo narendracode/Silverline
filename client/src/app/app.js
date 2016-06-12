@@ -26,7 +26,7 @@ angular.module('app').controller('HeaderCtrl', ['$scope','$location','AuthServic
     } 
 }]);
 
-angular.module('app').controller('AppCtrl', ['$scope','$location','AuthService','$rootScope','$localStorage','UsersListService', function($scope,$location,AuthService,$rootScope,$localStorage,UsersListService) {
+angular.module('app').controller('AppCtrl', ['$scope','$location','AuthService','$rootScope','$localStorage','UsersListService','UserService', function($scope,$location,AuthService,$rootScope,$localStorage,UsersListService,UserService) {
     
     $scope.myInit = function(){
         if($localStorage.token){
@@ -53,6 +53,13 @@ angular.module('app').controller('AppCtrl', ['$scope','$location','AuthService',
     };
     
     $scope.loadAdminUsers();
+    
+    $scope.deleteUser = function(index,phone){
+        UserService.delete({'phone':phone},function(result){
+            $scope.users.splice(index, 1);
+        }); 
+    }
+    
     
     $rootScope.hasAccess = function(level){
         if($rootScope.currentUser && accessLevels[$rootScope.currentUser['role']]){

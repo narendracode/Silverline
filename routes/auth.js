@@ -11,5 +11,5 @@ router.post('/upload',authController.uploadImg);
 router.get('/users',authController.getUsers);
 router.get('/user/:phone',authController.getUser);
 router.put('/user/:phone',authController.editUser);
-
+router.delete('/user/:phone',authController.deleteUser);
 module.exports = router;

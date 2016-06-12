@@ -89,8 +89,9 @@ angular.module('auth').controller('AuthController',  [
                                                     ,'$rootScope'
                                                     ,'Upload'
                                                     ,'UsersListService'
+                                                    ,'UserService'
     ,
-    function($scope,$resource,$state,$location,AuthService,$window,$rootScope,Upload,UsersListService){
+    function($scope,$resource,$state,$location,AuthService,$window,$rootScope,Upload,UsersListService,UserService){
                         $scope.errorExists = false;
                         $scope.profilePic = $location.protocol() + "://" + $location.host() + ":" + $location.port()+'/files/profile.png';
                         console.log("profilePic "+$scope.profilePic);
@@ -119,6 +120,8 @@ angular.module('auth').controller('AuthController',  [
                             }   
                        }//signup
 
+                        
+                        
                        $scope.login = function(){
                             $scope.$broadcast('show-errors-check-validity'); 
                             if ($scope.loginForm.$valid){  

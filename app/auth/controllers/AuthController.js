@@ -80,7 +80,19 @@ exports.editUser = function(req,res){
     }
 }
 
-
+exports.deleteUser = function(req,res){
+    if(req.user.role === 'admin'){
+        console.log("delete user with Phone : "+req.params.phone);
+        User.remove({'local.phone': req.params.phone },function(err,result){
+            if(err){
+                res.send(err);
+            }
+            res.json({type : true, data:{},err:''});  
+        });
+    }else{
+        return res.json({type : true, data:{},err:'You are not authorized to access this API.'}); 
+    }
+}
 
 exports.localLogin = function(req, res, next){
     passport.authenticate('local-login',function(err, user, info){

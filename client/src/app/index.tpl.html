@@ -3,18 +3,20 @@
     <div class="col-md-10">
         <h3>Welcome</h3>
         <div ng-show="currentUser">
-            only for currnt user.. 
             <div ng-show='hasAccess("user")'>
-                only for role user.. 
+            User 
             </div>
             <div ng-show='hasAccess("admin")'>
-                only for role admin.. 
+               Admin
                 <div>
                     <table class="table table-striped">
-                        <tr><td>Name</td><td>Phone</td><td>View</td><td>Edit</td><td>Delete</td></tr>
+                        <tr><td>Name</td><td>Phone</td><td>Call</td><td>View</td><td>Edit</td><td>Delete</td></tr>
                         <tr ng-repeat="user in users">
                             <td>{{user.info.name}}</td>
                             <td>{{user.local.phone}}</td>
+                            <td>
+                                <button class="btn btn-info" type="button" >Call</button>
+                            </td>
                             <td>
                                 <div>
                                     <a href="#/view/{{user.local.phone}}">View</a> 
@@ -27,7 +29,7 @@
                             </td>
                             <td>
                                 <div>
-                                    <a href="#/delete/{{user.local.phone}}">Delete</a> 
+                                    <button class="btn btn-primary" type="button" ng-click="deleteUser($index,user.local.phone)">Delete</button>  
                                 </div>
                             </td>
                         </tr>
