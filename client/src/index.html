@@ -8,6 +8,7 @@
         <link href="vendor/flat-ui/css/vendor/bootstrap.min.css" rel="stylesheet">
         <link href="vendor/flat-ui/css/flat-ui.css" rel="stylesheet">
         <link rel="stylesheet" href="vendor/jquery-ui/themes/smoothness/jquery-ui.min.css">
+        <link rel="stylesheet" href="vendor/jquery-ui-1.11.4.custom/jquery-ui.min.css"></script>
         <link href="assets/css/style.css" rel="stylesheet">
         <link href="vendor/bootstrap-social/bootstrap-social.css" rel="stylesheet">  
     </head>
@@ -15,7 +16,10 @@
         <div ng-include="'app/header.tpl.html'"></div>
         <div ng-init="myInit()" ui-view class="container-fluid"></div>
         <script src="vendor/jquery/jquery.min.js"></script>
-        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+        
+        <script src="vendor/jquery-ui-1.11.4.custom/jquery-ui.min.js"></script>
+        
+        
         <script src="vendor/flat-ui/js/vendor/html5shiv.js"></script>
         <script src="vendor/flat-ui/js/vendor/respond.min.js"></script>
         <script src="vendor/flat-ui/js/vendor/video.js"></script>
@@ -41,7 +45,10 @@
         <script src="common/directives/AutocompleteDemo.js"></script>
         <script src="app/auth/AuthServices.js"></script> 
         <script src="app/app.js"></script> 
-        <script src="app/auth/auth.js"></script> 
+        <script src="app/auth/auth.js"></script>  
+        <div ng-include="'app/footer.tpl.html'"></div>
+
     </body>
-    <div ng-include="'app/footer.tpl.html'"></div>
+    
+
 </html>

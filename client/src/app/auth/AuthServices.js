@@ -77,15 +77,19 @@ module.factory('AuthService',function($resource,$rootScope,$location,$localStora
         },
         signup: function(user,callback){
             var signupResource = new SignupResource();
-            signupResource.email = user.email;
-            signupResource.password = user.password;
             signupResource.name = user.name;
+            signupResource.phone = user.phone;
+            signupResource.email = user.email;
+            signupResource.profilePic = user.profilePic;
+            signupResource.address = user.address;
+            signupResource.password = user.password;
+            signupResource.dob = user.dob;
             signupResource.$save(function(result){
                 if(typeof result !== 'undefined'){
                     if(result.type){
-                        $localStorage.token = result.token;
+                        $localStorage.token = result.data.token;
                         console.log(" data after sign up : "+JSON.stringify(result));
-                        var user = parseToken(result.token);
+                        var user = parseToken(result.data.token);
                         $rootScope.currentUser = user;
                     }
                 }

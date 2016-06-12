@@ -21,7 +21,7 @@ var upload = multer({ dest : config.upload}).single('userPhoto');
 exports.localSignup = function(req, res, next){ 
     passport.authenticate('local-signup',function(err, user, info){
         if (err) { 
-            return res.json({type:false,data:'',err: 'error occured '+ err}); 
+            return res.json({type:false,data:{},err: 'error occured '+ err}); 
         }
         return res.json(user);
     })(req, res, next);

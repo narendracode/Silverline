@@ -1,29 +1,41 @@
 var LocalStrategy   = require('passport-local').Strategy;
 var User  = require('../models/UserModel.js');
-var jwt        = require("jsonwebtoken");
+var jwt   = require("jsonwebtoken");
 var config = require('../../../config/config');
 var fs = require('fs');
 
 
+// parse a date in yyyy-mm-dd format
+function parseDate(input) {
+    var parts = input.split('-');
+    // new Date(year, month [, day [, hours[, minutes[, seconds[, ms]]]]])
+    return new Date(parts[0], parts[1]-1, parts[2]); // Note: months are 0-based
+}
+
 exports.signupStrategy = new LocalStrategy({
-    usernameField : 'email',
+    usernameField : 'phone',
     passwordField : 'password',
     passReqToCallback : true 
 },
-  function(req, email, password, done) {
+  function(req, phone, password, done) {
     process.nextTick(function() {
         var name = req.body.name;
-        User.findOne({ 'local.email' :  email }, function(err, user) {
+        User.findOne({ 'local.phone' :  phone }, function(err, user) {
             if (err){
                 return done(err);
             }
             if (user) {
-                return done(null, {type : false,data: 'Email is already taken.'});
+                return done(null, {type : false,err: 'Account already registered with '+phone+'.',data:{}});
             } else {
                 var newUser  = new User();
                 newUser.role =  'user';
-                newUser.local.email = email;
-                newUser.local.name = name;
+                newUser.local.phone = phone;
+                newUser.name = req.body.name;
+                newUser.email = req.body.email;
+                newUser.profilePic = req.body.profilePic;
+                newUser.address = req.body.address;
+                newUser.dob = parseDate(req.body.dob);
+                console.log(" dob:"+newUser.dob)
                 newUser.local.password = newUser.generateHash(password);
                 newUser.save(function(err,user) {
                     if (err){
@@ -33,18 +45,14 @@ exports.signupStrategy = new LocalStrategy({
                         });
                     }
                     var cert = fs.readFileSync('key.pem');
-                    var token = jwt.sign({email: user.local.email, role : user.role, name : user.local.name, _id:user._id}, cert, { algorithm: 'HS512'});
-                    user.token = token;
-                    user.save(function(err,user1){
-                        if(err){
-                            return done(null, { 
-                                type : false,
-                                err: 'Error occured '+ err,
-                                data:''
-                                });
-                        }
-                        return done(null, {type : true, token : user1.token,err:''});
-                    }); 
+                    var token = jwt.sign({
+                                            email: user.email,
+                                            role : user.role,
+                                            name : user.name,
+                                            phone:user.local.phone,
+                                            profilePic:user.profilePic
+                                         }, cert, { algorithm: 'HS512'});
+                    return done(null, {type : true,err:'', data:{'token' : token}});
                 });   
             }
         });    

@@ -8,13 +8,14 @@ var userSchema = mongoose.Schema({
         default: '/files/profile.png'
     },
     local            : {
-        email        : String,
+        phone        : String,
         password     : String
     },
     name: {type: String, default:null},
     address: {type: String, default:null},
     about: {type: String, default:null},
-    phone:{type:String, default: null}
+    email:{type:String, default: null},
+    dob:{type:Date, default:null}
 });
 
 userSchema.plugin(require('mongoose-role'), {

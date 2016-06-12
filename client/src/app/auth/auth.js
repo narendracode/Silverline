@@ -5,6 +5,8 @@ angular.module('auth',[
                         ,'validation.match'
                         ,'auth.services'
                         ,'ngFileUpload'
+                        ,'ui.bootstrap'
+                        //,'ui.bootstrap.datepickerPopup'
                       ]
               );
 
@@ -39,8 +41,8 @@ angular.module('auth').controller('AuthController',  [
                                                     ,'AuthService'
                                                     ,'$window'
                                                     ,'$rootScope'
-                                                    ,'Upload'
-                                            ,
+                                                    ,'Upload'                     
+    ,
     function($scope,$resource,$state,$location,AuthService,$window,$rootScope,Upload){
                         $scope.errorExists = false;
                         $scope.profilePic = $location.protocol() + "://" + $location.host() + ":" + $location.port()+'/files/profile.png';
@@ -50,9 +52,13 @@ angular.module('auth').controller('AuthController',  [
                             $scope.$broadcast('show-errors-check-validity'); 
                             if ($scope.singupForm.$valid){
                                 AuthService.signup({
+                                                name: $scope.name,
+                                                phone: $scope.phone,
                                                 email: $scope.email,
+                                                profilePic: $scope.profilePic,
+                                                dob:$scope.dob,
+                                                address:$scope.address,
                                                 password: $scope.password, 
-                                                name: $scope.name
                                                 }
                                        ,function(result){
                                              if(!result['type']){
@@ -83,7 +89,6 @@ angular.module('auth').controller('AuthController',  [
                             }
                            }//login
                        
-                       
                        $scope.upload = function (file) {
                            // $scope.progressPercentage = 0.0;
                            Upload.upload({
@@ -93,12 +98,8 @@ angular.module('auth').controller('AuthController',  [
                                console.log('Success ' + resp.config.data.file.name + '   uploaded. Response: ' + JSON.stringify(resp.data));
                                console.log($location.protocol() + "://" + $location.host() + ":" + $location.port());
                                $scope.profilePic = $location.protocol() + "://" + $location.host() + ":" + $location.port()+'/files/'+resp.data.file.name;
-                               $scope.images.push($location.protocol() + "://" + $location.host() + ":" + $location.port()+'/files/'+resp.data.file.name);
-                               //$scope.progressPercentage = 0.0;
+                                //$scope.progressPercentage = 0.0;
                                var img =  "\n \n ![Alt text]("+$location.protocol() + "://" + $location.host() + ":" + $location.port()+'/files/'+resp.data.file.name+">)";
-
-
-                               $scope.blog.content = $scope.blog.content.concat(img);
                            }, function (resp) {
                                console.log('Error status: ' + resp.status);
                            }, function (evt) {
@@ -109,14 +110,109 @@ angular.module('auth').controller('AuthController',  [
                                if($scope.progressPercentage === 100.0){
                                    // resetProgressBar();
                                    //  $scope.progressPercentage = 0.0;
-
-
                                }
 
                            });
                        };
                        
+        $scope.today = function() {
+            $scope.dt = new Date();
+        };
+        $scope.today();
+
+        $scope.clear = function() {
+            $scope.dt = null;
+        };
+
+        $scope.inlineOptions = {
+            customClass: getDayClass,
+            minDate: new Date(),
+            showWeeks: true
+        };
+
+        $scope.dateOptions = {
+            dateDisabled: disabled,
+            formatYear: 'yy',
+            maxDate: new Date(2020, 5, 22),
+            minDate: new Date(),
+            startingDay: 1
+        };
+
+        // Disable weekend selection
+        function disabled(data) {
+            var date = data.date,
+                mode = data.mode;
+            return mode === 'day' && (date.getDay() === 0 || date.getDay() === 6);
+        }
+
+        $scope.toggleMin = function() {
+            $scope.inlineOptions.minDate = $scope.inlineOptions.minDate ? null : new Date();
+            $scope.dateOptions.minDate = $scope.inlineOptions.minDate;
+        };
+
+        $scope.toggleMin();
+
+        $scope.open1 = function() {
+            $scope.popup1.opened = true;
+        };
+
+        $scope.open2 = function() {
+            $scope.popup2.opened = true;
+        };
+
+        $scope.setDate = function(year, month, day) {
+            $scope.dt = new Date(year, month, day);
+        };
+
+        $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+        $scope.format = $scope.formats[0];
+        $scope.altInputFormats = ['M!/d!/yyyy'];
+
+        $scope.popup1 = {
+            opened: false
+        };
+
+        $scope.popup2 = {
+            opened: false
+        };
+
+        var tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        var afterTomorrow = new Date();
+        afterTomorrow.setDate(tomorrow.getDate() + 1);
+        $scope.events = [
+            {
+                date: tomorrow,
+                status: 'full'
+            },
+            {
+                date: afterTomorrow,
+                status: 'partially'
+            }
+        ];
+
+        function getDayClass(data) {
+            var date = data.date,
+                mode = data.mode;
+            if (mode === 'day') {
+                var dayToCheck = new Date(date).setHours(0,0,0,0);
+
+                for (var i = 0; i < $scope.events.length; i++) {
+                    var currentDay = new Date($scope.events[i].date).setHours(0,0,0,0);
+
+                    if (dayToCheck === currentDay) {
+                        return $scope.events[i].status;
+                    }
+                }
+            }
+
+            return '';
+        }
                        
+        
+        
+        
+        
                        
             }
 ]);
